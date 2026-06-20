@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jejak Sang Muhaddits</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+        :root { --primary: #0f4c5c; --secondary: #e36414; --accent: #fb8500; --bg-grad-1: #e0eafc; --bg-grad-2: #cfdef3; --text-dark: #2b2d42; --white: #ffffff; --success: #2a9d8f; --danger: #d62828; --warning: #f59e0b; }
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        html, body { height: 100%; margin: 0; padding: 0; }
+        body { padding: 20px; background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2)); display: flex; justify-content: center; align-items: center; color: var(--text-dark); overflow-y: auto; }
+        .app-wrapper { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow-y: auto; }
+        .game-card { background: rgba(255, 255, 255, 0.95); max-width: 900px; width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); overflow: hidden; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5); transition: all 0.3s ease; animation: slideInUp 0.5s ease forwards; }
+        .header { background: linear-gradient(135deg, var(--primary), #0a3642); color: var(--white); padding: 25px; text-align: center; position: relative; }
+        .header h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: 0.5px; }
+        .chapter-badge { display: inline-block; background: var(--accent); color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-top: 10px; animation: pulse 2s infinite; }
+        .intro-container { padding: 50px 30px; text-align: center; animation: fadeIn 0.6s ease forwards; }
+        .intro-container h2 { color: var(--primary); margin-bottom: 10px; font-size: 24px; }
+        .intro-container p { color: #475569; margin-bottom: 30px; line-height: 1.6; }
+        .input-group { max-width: 400px; margin: 0 auto 30px auto; text-align: left; }
+        .input-group label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); }
+        .input-group input { width: 100%; padding: 15px; border: 2px solid #cbd5e1; border-radius: 10px; font-size: 16px; outline: none; transition: border-color 0.3s; }
+        .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15, 76, 92, 0.1); }
+        .status-panel { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: rgba(240, 244, 248, 0.8); border-bottom: 2px solid #e2e8f0; font-size: 15px; font-weight: 600; flex-wrap: wrap; gap: 15px; }
+        .rep-container { display: flex; align-items: center; gap: 12px; }
+        .rep-bar-bg { width: 150px; height: 14px; background: #cbd5e1; border-radius: 10px; overflow: hidden; }
+        .rep-bar-fill { height: 100%; width: 50%; background: var(--secondary); border-radius: 10px; transition: all 0.5s ease; }
+        .question-counter { display: flex; align-items: center; gap: 8px; background: #f0f7f9; padding: 8px 15px; border-radius: 8px; }
+        .scene-container { padding: 35px 30px; min-height: 250px; animation: fadeIn 0.5s ease forwards; }
+        .story-text { font-size: 16px; line-height: 1.8; margin-bottom: 25px; color: #334155; }
+        .story-text p.narrative { font-style: italic; color: #555; background: #f8fafc; padding: 15px; border-left: 4px solid var(--accent); border-radius: 4px; margin-bottom: 15px; }
+        .story-text p.question { font-weight: 600; color: var(--primary); font-size: 17px; }
+        .choices-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; animation: slideUp 0.6s ease forwards; }
+        @media (max-width: 600px) { .choices-grid { grid-template-columns: 1fr; } }
+        .btn-choice { background: var(--white); border: 2px solid #e2e8f0; color: var(--text-dark); padding: 16px 20px; border-radius: 12px; font-size: 14px; text-align: left; cursor: pointer; transition: all 0.2s ease; position: relative; overflow: hidden; }
+        .btn-choice:hover { border-color: var(--primary); background: #f0f7f9; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(15, 76, 92, 0.1); }
+        .btn-choice:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 15px 35px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: inline-flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-primary:hover { background: #0a3642; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(15, 76, 92, 0.2); }
+        .btn-outline { background: white; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-outline:hover { background: #f0f7f9; }
+        
+        /* Tombol Mulai Ulang Baru yang Lebih Menarik */
+        .btn-restart { 
+            background: linear-gradient(135deg, var(--secondary), var(--accent)); 
+            color: white; 
+            border: none; 
+            padding: 16px 45px; 
+            border-radius: 50px; 
+            font-size: 18px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            display: inline-flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 10px; 
+            box-shadow: 0 10px 20px rgba(227, 100, 20, 0.3); 
+            animation: pulse-restart 2s infinite; 
+            margin-top: 15px;
+        }
+        .btn-restart:hover { 
+            transform: translateY(-5px) scale(1.05); 
+            box-shadow: 0 15px 25px rgba(227, 100, 20, 0.5); 
+        }
+
+        .feedback-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
+        .feedback-box { background: white; padding: 30px; border-radius: 15px; max-width: 500px; text-align: center; transform: scale(0.8); opacity: 0; transition: all 0.3s; }
+        .feedback-box.show { transform: scale(1); opacity: 1; }
+        .feedback-icon { font-size: 48px; margin-bottom: 15px; animation: bounce 0.6s ease; }
+        .feedback-title { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+        .recap-container { padding: 40px 30px; text-align: center; animation: fadeIn 0.6s ease forwards; }
+        .rapor-card { background: #f8fafc; border: 2px dashed #cbd5e1; padding: 30px; border-radius: 15px; margin: 20px auto; max-width: 500px; text-align: left; }
+        .rapor-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e2e8f0; }
+        .rapor-row:last-child { border-bottom: none; font-weight: 700; font-size: 18px; color: var(--primary); }
+        .action-buttons { display: flex; gap: 15px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
+        .leaderboard-container { padding: 30px; max-width: 600px; margin: 20px auto; }
+        .leaderboard-table { width: 100%; border-collapse: collapse; background: #f8fafc; border-radius: 12px; overflow: hidden; }
+        .leaderboard-table thead { background: var(--primary); color: white; }
+        .leaderboard-table th, .leaderboard-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        .leaderboard-table tbody tr:hover { background: #e0eafc; }
+        .leaderboard-table tr:last-child td { border-bottom: none; }
+        .achievements-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; margin: 20px 0; }
+        .badge { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; text-align: center; font-weight: 600; cursor: pointer; transition: all 0.3s; opacity: 0.5; }
+        .badge.unlocked { opacity: 1; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transform: scale(1.05); }
+        .badge:hover.unlocked { transform: scale(1.1); }
+        .badge-icon { font-size: 32px; margin-bottom: 5px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin: 20px 0; }
+        .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; text-align: center; }
+        .stat-value { font-size: 28px; font-weight: 700; margin-bottom: 5px; }
+        .stat-label { font-size: 12px; opacity: 0.9; }
+        .loading-spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(15, 76, 92, 0.3); border-radius: 50%; border-top-color: var(--primary); animation: spin 0.8s linear infinite; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(251, 133, 0, 0.7); } 50% { box-shadow: 0 0 0 10px rgba(251, 133, 0, 0); } }
+        @keyframes pulse-restart { 0% { box-shadow: 0 0 0 0 rgba(227, 100, 20, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(227, 100, 20, 0); } 100% { box-shadow: 0 0 0 0 rgba(227, 100, 20, 0); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 600px) { .game-card { border-radius: 15px; } .header h1 { font-size: 22px; } .intro-container, .scene-container { padding: 25px 20px; } .status-panel { flex-direction: column; gap: 10px; } .rep-bar-bg { width: 100%; } }
+    </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="app-wrapper">
+   <div class="game-card" id="screenIntro">
+    <div class="header">
+     <h1 id="gameTitle">Jejak Sang Muhaddits</h1>
+     <div class="chapter-badge">Game Evaluasi Ilmu Hadits</div>
+    </div>
+    <div class="intro-container">
+     <h2 id="welcomeMsg">Selamat Datang!</h2>
+     <p id="introMsg">Isi data dirimu. Pilihanmu akan menentukan reputasimu sebagai ulama!</p>
+     <div class="input-group">
+      <label>Nama Lengkap:</label> <input type="text" id="playerNameInput" placeholder="Contoh: Fulan bin Fulan" autocomplete="off">
+     </div><button class="btn-primary" onclick="startGame()">Mulai Petualangan</button>
+     <hr style="margin: 40px 0; border: none; border-top: 2px solid #e2e8f0;">
+     <h3 style="color: var(--primary); margin-bottom: 20px;">📊 Leaderboard Pemain</h3>
+     <div id="leaderboardIntro"></div>
+    </div>
+   </div>
+   <div class="game-card" id="screenGame" style="display: none;">
+    <div class="header">
+     <h1 id="gameTitle">Jejak Sang Muhaddits</h1>
+     <div class="chapter-badge" id="chapterBadge">Memulai Perjalanan</div>
+    </div>
+    <div class="status-panel">
+     <div>Pelajar: <span id="displayPlayerName" style="color:var(--primary);"></span></div>
+     <div class="question-counter"><span id="questionCounter">0/15</span></div>
+     <div class="rep-container">
+      Reputasi: <span id="repText">50</span>
+      <div class="rep-bar-bg">
+       <div class="rep-bar-fill" id="repFill"></div>
+      </div>
+     </div>
+    </div>
+    <div class="scene-container">
+     <div class="story-text" id="storyText"></div>
+     <div class="choices-grid" id="choicesGrid"></div>
+    </div>
+   </div>
+   <div class="game-card" id="screenRecap" style="display: none;">
+    <div class="header">
+     <h1>Evaluasi Selesai</h1>
+     <div class="chapter-badge">Kartu Hasil Belajar</div>
+    </div>
+    <div class="recap-container">
+     <h2 style="color: var(--primary);">Alhamdulillah! 🎉</h2>
+     <div class="stats-grid">
+      <div class="stat-card">
+       <div class="stat-value" id="statScore">0</div>
+       <div class="stat-label">Skor Reputasi</div>
+      </div>
+      <div class="stat-card">
+       <div class="stat-value" id="statAccuracy">0%</div>
+       <div class="stat-label">Akurasi</div>
+      </div>
+      <div class="stat-card">
+       <div class="stat-value" id="statCorrect">0</div>
+       <div class="stat-label">Jawaban Benar</div>
+      </div>
+     </div>
+     <h3 style="color: var(--primary); margin-top: 30px;">🏆 Pencapaian Kamu</h3>
+     <div class="achievements-grid" id="achievementsContainer"></div>
+     <div class="rapor-card">
+      <div class="rapor-row"><span>Nama:</span> <strong id="recapName">Nama</strong></div>
+      <div class="rapor-row"><span>Skor:</span> <strong id="recapScore">0</strong></div>
+      <div class="rapor-row"><span>Predikat:</span> <strong id="recapEnding">-</strong></div>
+     </div>
+     <div class="action-buttons">
+      <!-- TOMBOL PDF DIHAPUS, DIGANTI TOMBOL RESTART BARU -->
+      <button class="btn-restart" onclick="resetGame()">✨ Mulai Lembaran Baru ✨</button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div class="feedback-overlay" id="feedbackOverlay">
+   <div class="feedback-box" id="feedbackBox">
+    <div class="feedback-icon" id="feedbackIcon">✅</div>
+    <div class="feedback-title" id="feedbackTitle">Tepat Sekali!</div>
+    <p id="feedbackMessage"></p><button class="btn-primary" onclick="proceedToNextNode()" style="margin-top: 15px;">Lanjut Perjalanan</button>
+   </div>
+  </div>
+  <button class="sound-control" id="soundToggle" style="position:fixed;bottom:20px;left:20px;padding:10px;border-radius:50%;cursor:pointer;background:white;border:2px solid var(--primary);font-size:16px;">🔊</button>
+  <script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let isSound = true;
+    function playSnd(f, d) {
+      if(!isSound) return;
+      try {
+        const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.frequency.value = f; gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + d);
+        osc.start(audioCtx.currentTime); osc.stop(audioCtx.currentTime + d);
+      } catch(e){}
+    }
+    const sndWin = () => { playSnd(523,0.1); setTimeout(()=>playSnd(659,0.1),100); setTimeout(()=>playSnd(783,0.2),200); }
+    const sndLose = () => { playSnd(523,0.1); setTimeout(()=>playSnd(392,0.1),100); setTimeout(()=>playSnd(261,0.2),200); }
+
+    let pName = "", rep = 25, curr = 'q1', target = '', endTitle = "", cAns = 0, tQ = 0, asked = [], allP = [];
+    
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw4k9v4OXOFmj4kLKd_2LjTYF6OCw8vP7diqh9Q4l4wBH8hjXjclD4ghDOQ1xTaM1SM/exec';
+
+    const storyGraph = {
+        'q1': {
+            badge: "Awal Pengembaraan",
+            story: `<p class="narrative">Kamu adalah seorang pemuda yang bertekad menuntut ilmu hadits. Sebelum mengizinkanmu merantau, Ustaz di kampung halaman mengujimu.</p><p class="question">"Sebutkan pembagian hadits secara garis besar berdasarkan kuantitas (jumlah) perawinya!" tanyanya.</p>`,
+            choices: [
+                { text: "Shahih dan Dha'if", correct: false, next: 'q2', rep: -3, msg: "Ustaz menggeleng. 'Itu pembagian kualitas, bukan kuantitas. Belajarlah lagi di jalan.' Kamu berangkat dengan perasaan gugup." },
+                { text: "Mutawatir dan Ahad", correct: true, next: 'q2', rep: 5, msg: "Ustaz tersenyum bangga. 'Tepat. Kamu sudah siap merantau!' Kamu pun memulai perjalanan dengan penuh percaya diri." },
+                { text: "Qauli dan Fi'li", correct: false, next: 'q2', rep: -3, msg: "Ustaz menghela napas. 'Itu bentuk sanadnya. Tapi tak apa, mulailah perjalananmu dan perbanyak membaca.'" },
+                { text: "Marfu' dan Mauquf", correct: false, next: 'q2', rep: -3, msg: "Ustaz mengerutkan dahi. 'Itu berdasarkan akhir sanadnya. Hati-hati di jalan, carilah guru yang baik.'" }
+            ]
+        },
+        'q2': {
+            badge: "Bertemu Kafilah",
+            story: `<p class="narrative">Di tengah gurun, kamu bergabung dengan kafilah dagang. Seorang musafir penasaran mengapa hadits Mutawatir sangat kuat hingga mustahil ada kedustaan.</p><p class="question">Bagaimana kamu menjelaskan syarat utama Mutawatir kepadanya?</p>`,
+            choices: [
+                { text: "Diriwayatkan oleh satu sahabat terpercaya", correct: false, next: 'q3', rep: -3, msg: "Musafir itu bingung. 'Kalau cuma satu, bagaimana mustahil dusta?' Reputasimu sedikit menurun." },
+                { text: "Jumlah perawinya sangat banyak", correct: true, next: 'q3', rep: 5, msg: "Musafir itu mengangguk paham. Penjelasanmu menyebar dan namamu mulai dikenal di kafilah." },
+                { text: "Matannya sejalan dengan logika", correct: false, next: 'q3', rep: -3, msg: "Musafir itu menyanggah, 'Terkadang mukjizat di luar logika, kan?' Kamu sadar alasanmu kurang tepat." },
+                { text: "Perawinya hafal Al-Qur'an", correct: false, next: 'q3', rep: -3, msg: "Musafir itu tersenyum ragu. Bukan itu syarat utamanya. Perjalanan berlanjut." }
+            ]
+        },
+        'q3': {
+            badge: "Tiba di Kota Ilmu",
+            story: `<p class="narrative">Kamu tiba di Baghdad. Saat membongkar catatan di masjid agung, kamu menemukan sanad langka yang hanya diriwayatkan oleh SATU perawi di tingkat sahabat.</p><p class="question">Teman sebelahmu bertanya, 'Hadits apa namanya jika perawinya menyendiri seperti itu?'</p>`,
+            choices: [
+                { text: "Hadits 'Aziz", correct: false, next: 'q4', rep: -3, msg: "Temanmu membalas, ''Aziz bukankah dua orang?'. Kamu terdiam dan segera meralat catatanmu." },
+                { text: "Hadits Garib", correct: true, next: 'q4', rep: 5, msg: "'Tepat sekali, Garib artinya menyendiri!' puji temanmu. Percakapan ini menarik perhatian ulama setempat." },
+                { text: "Hadits Masyhur", correct: false, next: 'q4', rep: -3, msg: "Temanmu terkekeh. 'Masyhur itu populer, artinya banyak orang.' Kamu tersipu malu." },
+                { text: "Hadits Mutawatir", correct: false, next: 'q4', rep: -3, msg: "Temanmu menggeleng tegas. 'Itu sangat bertolak belakang!' Kamu segera memperbaiki kesalahanmu." }
+            ]
+        },
+        'q4': {
+            badge: "Ujian Sang Syekh",
+            story: `<p class="narrative">Peristiwa di masjid membuatmu dipanggil oleh Syekh besar. Ia menatapmu tajam dan menguji fondasi utamamu.</p><p class="question">"Wahai anak muda, jika engkau benar penuntut ilmu, sebutkan padaku definisi mutlak Hadits Shahih!"</p>`,
+            choices: [
+                { text: "Sanad muttasil, perawi adil & dabit, tanpa syadz & 'illat", correct: true, next: 'q5', rep: 5, msg: "Wajah Syekh berbinar. 'Luar biasa!' Kamu diizinkan duduk di barisan paling depan majelisnya." },
+                { text: "Perawinya banyak dan isinya bagus", correct: false, next: 'q5', rep: -3, msg: "Syekh mengerutkan dahi. 'Terlalu awam bahasamu!' Kamu disuruh duduk di barisan belakang." },
+                { text: "Diriwayatkan Sahabat langsung ke Tabi'in", correct: false, next: 'q5', rep: -3, msg: "Syekh menggeleng. 'Itu hanya sifat sanad.' Kamu diminta menyimak pelajaran lebih teliti." },
+                { text: "Disepakati seluruh Mazhab fiqih", correct: false, next: 'q5', rep: -3, msg: "Syekh menegurmu, 'Ilmu riwayat berbeda dengan ilmu fiqih.' Kamu menunduk mengiyakan." }
+            ]
+        },
+        'q5': {
+            badge: "Syarat Perawi: Adil",
+            story: `<p class="narrative">Hari berlalu. Di kelas, Syekh membedah syarat pertama hadits shahih yang kamu sebutkan: Adil.</p><p class="question">"Kriteria apa yang membuat seorang perawi pantas disebut 'Adil' secara musthalah?" tanya Syekh kepada jamaah.</p>`,
+            choices: [
+                { text: "Pernah menjabat sebagai hakim", correct: false, next: 'q6', rep: -3, msg: "Orang-orang di majelis tertawa pelan. 'Kita bukan bicara hukum tata negara,' ucap Syekh." },
+                { text: "Muslim, balig, berakal, tidak fasik, & menjaga wibawa", correct: true, next: 'q6', rep: 5, msg: "Kamu menjawab dengan lantang. Majelis terdiam kagum. 'Benar, moralnya harus terjaga!' sahut Syekh." },
+                { text: "Membagi rata bantuan ke fakir miskin", correct: false, next: 'q6', rep: -3, msg: "Syekh tersenyum maklum. 'Itu adil secara sosial, bukan adilnya seorang perawi.' Kamu mencatatnya." },
+                { text: "Ingatan fotografis yang tidak pernah lupa", correct: false, next: 'q6', rep: -3, msg: "Syekh menunjukmu, 'Itu Dhabit, bukan Adil. Jangan tertukar!'" }
+            ]
+        },
+        'q6': {
+            badge: "Syarat Perawi: Dhabit",
+            story: `<p class="narrative">Melanjutkan pembahasan sebelumnya, Syekh menyinggung tentang kecerdasan seorang perawi.</p><p class="question">"Orang yang shalih sekalipun riwayatnya bisa ditolak jika ia tidak 'Dhabit'. Apa esensi dari Dhabit?"</p>`,
+            choices: [
+                { text: "Silsilah keturunan ahli agama", correct: false, next: 'q7', rep: -3, msg: "Syekh menatap tajam. 'Agama ini dinilai dari ilmu, bukan sekadar nasab.' Kamu memohon maaf." },
+                { text: "Memahami makna tersirat hukum", correct: false, next: 'q7', rep: -3, msg: "Syekh menggeleng. 'Tugas perawi adalah menyampaikan redaksi, ahli fiqih yang merumuskan hukum.'" },
+                { text: "Kuat hafalannya / akurat catatannya", correct: true, next: 'q7', rep: 5, msg: "Tepat! Syekh memberimu hadiah sebuah pena berukir karena jawabanmu yang presisi." },
+                { text: "Pernah bertemu Rasulullah", correct: false, next: 'q7', rep: -3, msg: "Syekh menghela napas. 'Itu definisi Sahabat. Fokuslah, anak muda.'" }
+            ]
+        },
+        'q7': {
+            badge: "Menemukan Syadz",
+            story: `<p class="narrative">Bulan berikutnya, kamu bekerja di perpustakaan majelis. Kamu menemukan riwayat dari perawi terpercaya, namun bertentangan dengan sekelompok perawi lain yang jauh lebih kuat.</p><p class="question">Kecacatan langka yang kamu temukan ini disebut...</p>`,
+            choices: [
+                { text: "Munqati'", correct: false, next: 'q8', rep: -3, msg: "Pustakawan menegurmu. 'Sanadnya bersambung, jadi bukan Munqati'.' Kamu kembali memeriksa." },
+                { text: "Syadz (Janggal)", correct: true, next: 'q8', rep: 5, msg: "Pustakawan takjub pada kejelianmu. Laporanmu diteruskan kepada Syekh sebagai temuan penting!" },
+                { text: "Mauquf", correct: false, next: 'q8', rep: -3, msg: "Pustakawan menggeleng. 'Ini bukan soal riwayat yang berhenti di Sahabat.' Kamu harus lebih teliti." },
+                { text: "Mursal", correct: false, next: 'q8', rep: -3, msg: "Kamu salah menganalisis. Pustakawan menyuruhmu membaca ulang bab cacat hadits." }
+            ]
+        },
+        'q8': {
+            badge: "Derajat Hasan",
+            story: `<p class="narrative">Saat berdiskusi di beranda, seorang kawan meratapi catatannya. Ada hadits yang sanadnya bersambung dan perawinya adil, TAPI satu perawi dinilai 'kurang kuat hafalannya'.</p><p class="question">Kamu menenangkan kawanmu. 'Jangan khawatir, status haditsmu hanya turun sedikit menjadi...'</p>`,
+            choices: [
+                { text: "Hadits Daif", correct: false, next: 'q9', rep: -3, msg: "Kawanmu malah menangis karena mengira haditsnya lemah tak berguna. Kamu merasa bersalah." },
+                { text: "Hadits Hasan", correct: true, next: 'q9', rep: 5, msg: "Kawanmu tersenyum lega. 'Ah benar! Masih bisa dijadikan dalil,' ucapnya berterima kasih padamu." },
+                { text: "Hadits Maudu'", correct: false, next: 'q9', rep: -3, msg: "Kawanmu marah. 'Perawinya bukan pendusta, kenapa kau sebut palsu!' Kamu buru-buru minta maaf." },
+                { text: "Hadits Masyhur", correct: false, next: 'q9', rep: -3, msg: "Kawanmu kebingungan. Jawabanmu tidak nyambung dengan masalah kualitas." }
+            ]
+        },
+        'q9': {
+            badge: "Menemukan Penguat",
+            story: `<p class="narrative">Kawanmu menemukan beberapa jalur riwayat lain yang serupa untuk haditsnya yang kurang kuat tadi. Ia berlari mencarimu.</p><p class="question">"Karena didukung banyak jalur penguat, status hadits Hasan-ku ini naik derajatnya menjadi apa?"</p>`,
+            choices: [
+                { text: "Hasan li-zatihi", correct: false, next: 'q10', rep: -3, msg: "Kawanmu membantah, 'Li-zatihi itu karena dirinya sendiri, ini kan dari penguat.' Kamu tersadar keliru." },
+                { text: "Shahih li-gairihi", correct: true, next: 'q10', rep: 5, msg: "Kamu mengoreksinya, 'Tepatnya Shahih li-gairihi!' Reputasimu melesat." },
+                { text: "Shahih Mutlak", correct: false, next: 'q10', rep: -3, msg: "Kamu terlalu bersemangat, 'Shahih Mutlak!' Kawanmu ragu, itu terlalu tinggi." },
+                { text: "Tetap Dha'if", correct: false, next: 'q10', rep: -3, msg: "Kawanmu kecewa. 'Katanya ada jalur penguat?' Kamu salah memberi penilaian." }
+            ]
+        },
+        'q10': {
+            badge: "Sanad yang Hilang",
+            story: `<p class="narrative">Tahun berganti, kamu masuk ke kelas tingkat lanjut. Syekh memberikan ujian analisis sanad. Ada Tabi'in yang langsung berkata "Rasulullah bersabda", tanpa menyebut nama Sahabat.</p><p class="question">"Penyakit sanad putus di ujung atas ini kita sebut apa?" tanya Syekh menantang kelas.</p>`,
+            choices: [
+                { text: "Mu'allaq", correct: false, next: 'q11', rep: -3, msg: "Syekh memotong perkataanmu. 'Mu'allaq itu putusnya di bawah (permulaan)!' Kamu terdiam." },
+                { text: "Mu'dal", correct: false, next: 'q11', rep: -3, msg: "Syekh menggeleng. 'Itu jika hilang dua perawi berturut-turut.' Nilai ujianmu dikurangi." },
+                { text: "Mursal", correct: true, next: 'q11', rep: 5, msg: "Kamu menjawab cepat. 'Mursal, wahai Syekh!' Beliau mengangguk puas dan memberimu nilai sempurna." },
+                { text: "Mudallas", correct: false, next: 'q11', rep: -3, msg: "Syekh menegur keras. 'Mudallas itu menyembunyikan cacat, bukan terang-terangan terlewat!'" }
+            ]
+        },
+        'q11': {
+            badge: "Sumber Perkataan",
+            story: `<p class="narrative">Selesai kelas sanad, pelajaran beralih ke analisis matan (teks). Syekh memberikan sebuah kutipan fatwa dari seorang Tabi'in (bukan perkataan Nabi).</p><p class="question">Jika disandarkan kepada Nabi disebut Marfu', maka riwayat yang disandarkan pada Tabi'in disebut...</p>`,
+            choices: [
+                { text: "Maqtu'", correct: true, next: 'q12', rep: 5, msg: "Tepat! Syekh menunjukmu sebagai ketua kelompok diskusi karena kecerdasanmu." },
+                { text: "Mauquf", correct: false, next: 'q12', rep: -3, msg: "Syekh menghela napas. 'Mauquf itu milik Sahabat.' Kelompok diskusimu sedikit kecewa padamu." },
+                { text: "Munqati'", correct: false, next: 'q12', rep: -3, msg: "Kamu salah sebut antara istilah teks dan istilah sanad. Lanjutkan belajarmu." },
+                { text: "Musahhaf", correct: false, next: 'q12', rep: -3, msg: "Teman-temanmu menahan tawa. Itu penyakit penulisan huruf, bukan sumber riwayat." }
+            ]
+        },
+        'q12': {
+            badge: "Redaksi Sisipan",
+            story: `<p class="narrative">Kamu hampir lulus. Saat merevisi manuskrip akhir, kamu menemukan seorang penulis yang memasukkan penjelasan pribadinya ke dalam teks hadits tanpa jeda.</p><p class="question">Redaksi hadits yang bercampur dengan perkataan perawi ini dinamakan penyakit...</p>`,
+            choices: [
+                { text: "Maqlub", correct: false, next: 'q13', rep: -3, msg: "Syekh penilai menggeleng. 'Maqlub itu terbalik sanad/matannya.' Revisi manuskripmu ditolak." },
+                { text: "Mudraj", correct: true, next: 'q13', rep: 5, msg: "Syekh penilai tersenyum. 'Kritis sekali! Ya, itu Mudraj (sisipan).' Manuskripmu disetujui." },
+                { text: "Mudtarib", correct: false, next: 'q13', rep: -3, msg: "Syekh penilai mencoret laporanmu. 'Bukan, itu artinya kacau balau.' Kamu diminta menulis ulang." },
+                { text: "Munkar", correct: false, next: 'q13', rep: -3, msg: "Syekh penilai mengoreksimu. 'Perawi ini tidak fasik, ia hanya ceroboh.' Revisi kembali." }
+            ]
+        },
+        'q13': {
+            badge: "Melawan Pendusta",
+            story: `<p class="narrative">Saat beristirahat di pasar, kamu melihat seorang tabib jalanan meracik jamu dan meneriakkan klaim berkedok hadits dari Nabi untuk melariskan jualannya.</p><p class="question">Kamu maju dan memperingatkan warga bahwa yang diucapkan tabib itu adalah ciptaan fiktif, yang disebut hadits...</p>`,
+            choices: [
+                { text: "Matruk", correct: false, next: 'q14', rep: -3, msg: "Tabib itu berdalih, warga pun bingung. Matruk berarti perawi tertuduh dusta, bukan hadits ciptaan sengaja." },
+                { text: "Maudu'", correct: true, next: 'q14', rep: 5, msg: "Kamu berseru 'Ini Maudu' (Palsu)!' Warga sadar dan mengusir tabib itu. Keberanianmu diakui penduduk kota." },
+                { text: "Syadz", correct: false, next: 'q14', rep: -3, msg: "Warga tidak mengerti bahasa teknismu. Tabib itu malah mendapatkan uang sumbangan." },
+                { text: "Mu'allal", correct: false, next: 'q14', rep: -3, msg: "Kamu terlalu halus mengkritiknya. Warga mengira itu hadits yang sah-sah saja diamalkan." }
+            ]
+        },
+        'q14': {
+            badge: "Nasihat Sang Alim",
+            story: `<p class="narrative">Penduduk kota mulai sering bertanya padamu. Seorang tetangga bertanya, bolehkah ia menggunakan hadits Daif (lemah tapi tidak parah) untuk penyemangat tahajud.</p><p class="question">Sebagai calon ulama, kamu tahu ulama memberi kelonggaran penggunaan hadits Daif KHUSUS untuk...</p>`,
+            choices: [
+                { text: "Fadail al-A'mal (Keutamaan Amal)", correct: true, next: 'q15', rep: 5, msg: "Tetanggamu puas dengan jawabanmu yang bijak dan mengamalkannya dengan baik. Namamu makin masyhur." },
+                { text: "Menetapkan rukun iman", correct: false, next: 'q15', rep: -3, msg: "Syekhmu yang kebetulan lewat mendengar itu dan menegurmu di depan umum. 'Aqidah butuh dalil mutlak!'" },
+                { text: "Menentukan denda peradilan", correct: false, next: 'q15', rep: -3, msg: "Hakim kota menertawakan fatwamu. Hukum pidana Islam tidak bisa dibangun dari dalil lemah." },
+                { text: "Sejarah alam semesta", correct: false, next: 'q15', rep: -3, msg: "Jawabanmu membuat warga berdebat kusir. Reputasimu sebagai pemfatwa menurun." }
+            ]
+        },
+        'q15': {
+            badge: "Ujian Terakhir",
+            story: `<p class="narrative">Hari yang ditunggu tiba. Kamu berdiri di hadapan Majelis Mufti. Ujian terakhirmu hanyalah satu pertanyaan pamungkas.</p><p class="question">"Wahai anakku, sebutkan dua tokoh penyusun kitab yang disepakati oleh seluruh umat Islam sebagai kitab paling shahih setelah Al-Qur'an!"</p>`,
+            choices: [
+                { text: "Imam Malik & Imam Syafi'i", correct: false, next: 'end', rep: -3, msg: "Mufti tersenyum tipis. 'Mereka guru besar fiqih, tapi bukan itu jawaban puncaknya.'" },
+                { text: "Imam Bukhari & Imam Muslim", correct: true, next: 'end', rep: 5, msg: "Seluruh majelis bertakbir! Mufti Agung turun dan memelukmu. Kamu berhasil!" },
+                { text: "Imam Abu Daud & At-Tirmidzi", correct: false, next: 'end', rep: -3, msg: "Mufti menggeleng. 'Kitab Sunan mereka luar biasa, tapi ada yang lebih mutlak kesahihannya.'" },
+                { text: "Ibnu Hibban & Ibnu Khuzaimah", correct: false, next: 'end', rep: -3, msg: "Mufti menghela napas. 'Kamu hampir di puncak, tapi masih terpeleset sedikit.'" }
+            ]
+        }
+    };
+
+    const achieves = [
+        { title: 'Amirul Mukminin', icon: '👑', cond: r => r >= 95 },
+        { title: 'Al-Hafizh', icon: '🌟', cond: r => r >= 80 },
+        { title: 'Al-Musnid', icon: '📜', cond: r => r >= 65 },
+        { title: 'Ulama Desa', icon: '🕌', cond: r => r >= 50 },
+        { title: 'Pengembara', icon: '🐫', cond: r => r >= 25 },
+        { title: 'Santri Baru', icon: '📖', cond: r => r < 25 }
+    ];
+
+    if (window.elementSdk && typeof window.elementSdk.init === 'function') {
+      window.elementSdk.init({
+          defaultConfig: {
+              game_title: "Jejak Sang Muhaddits",
+              welcome_title: "Selamat Datang!",
+              intro_message: "Isi data dirimu. Pilihanmu akan menentukan reputasimu sebagai ulama!"
+          },
+          onConfigChange: (c) => {
+              document.getElementById('gameTitle').textContent = c.game_title || "Jejak Sang Muhaddits";
+              document.getElementById('welcomeMsg').textContent = c.welcome_title || "Selamat Datang!";
+              document.getElementById('introMsg').textContent = c.intro_message || "Isi data dirimu. Pilihanmu akan menentukan reputasimu sebagai ulama!";
+          },
+          mapToCapabilities: () => ({ recolorables: [], borderables: [] }),
+          mapToEditPanelValues: (c) => new Map([
+              ['game_title', c.game_title || "Jejak Sang Muhaddits"],
+              ['welcome_title', c.welcome_title || "Selamat Datang!"],
+              ['intro_message', c.intro_message || "Isi data dirimu..."]
+          ])
+      });
+    }
+
+    window.onload = () => { loadLDB(); };
+
+    function startGame() {
+        const iName = document.getElementById('playerNameInput').value.trim();
+        if(!iName) return alert("Isi namamu!");
+        pName = iName; tQ = Object.keys(storyGraph).length;
+        document.getElementById('displayPlayerName').innerText = pName;
+        document.getElementById('screenIntro').style.display = 'none';
+        document.getElementById('screenGame').style.display = 'block';
+        render(curr);
+    }
+
+    function upUI() {
+        document.getElementById('repText').innerText = rep;
+        const fill = document.getElementById('repFill');
+        fill.style.width = rep + '%';
+        fill.style.backgroundColor = rep >= 75 ? "var(--success)" : rep >= 40 ? "var(--accent)" : "var(--danger)";
+        document.getElementById('questionCounter').innerText = asked.length + "/" + tQ;
+    }
+
+    function render(id) {
+        if (id === 'end') return showEnd();
+        if (rep <= 0) return showFail();
+        const n = storyGraph[id];
+        document.getElementById('chapterBadge').innerText = n.badge;
+        document.getElementById('storyText').innerHTML = n.story;
+        const cGrid = document.getElementById('choicesGrid');
+        cGrid.innerHTML = '';
+        n.choices.forEach(c => {
+            const b = document.createElement('button');
+            b.className = 'btn-choice'; b.innerHTML = c.text;
+            b.onclick = () => handle(c); cGrid.appendChild(b);
+        });
+        asked.push(id); upUI();
+    }
+
+    function handle(c) {
+        rep = Math.max(0, Math.min(100, rep + c.rep));
+        if (c.correct) { cAns++; sndWin(); } else sndLose();
+        upUI(); showFB(c);
+    }
+
+    function showFB(c) {
+        document.getElementById('feedbackIcon').innerText = c.correct ? "🌟" : "⚠️";
+        const t = document.getElementById('feedbackTitle');
+        t.innerText = c.correct ? "Luar Biasa!" : "Ujian Perjalanan";
+        t.style.color = c.correct ? "var(--success)" : "var(--danger)";
+        document.getElementById('feedbackMessage').innerText = c.msg;
+        target = c.next;
+        document.getElementById('feedbackOverlay').style.display = "flex";
+        setTimeout(() => document.getElementById('feedbackBox').classList.add('show'), 10);
+    }
+
+    function proceedToNextNode() {
+        document.getElementById('feedbackBox').classList.remove('show');
+        setTimeout(() => { document.getElementById('feedbackOverlay').style.display = "none"; curr = target; render(curr); }, 300);
+    }
+
+    function showEnd() {
+        let endingMessage = "";
+
+        if (rep >= 95) {
+            endTitle = "Amirul Mukminin fil Hadits";
+            endingMessage = "Luar biasa! Namamu diukir dengan tinta emas dalam sejarah. Ratusan murid dari berbagai penjuru dunia kini berdesakan di majelismu. Engkau telah mencapai derajat ulama hadits tertinggi di zaman ini!";
+        } else if (rep >= 80) {
+            endTitle = "Al-Hafizh";
+            endingMessage = "Masya Allah! Kamu diangkat menjadi rujukan utama di kota besar. Kitab-kitab karyamu menjadi bacaan wajib para penuntut ilmu. Engkau resmi menjadi seorang Muhaddits Besar.";
+        } else if (rep >= 65) {
+            endTitle = "Al-Musnid";
+            endingMessage = "Alhamdulillah. Kamu dipercaya mengasuh majelis di masjid agung. Banyak santri dari negeri jauh berdatangan khusus untuk meminta ijazah sanad hadits darimu.";
+        } else if (rep >= 50) {
+            endTitle = "Ulama Desa";
+            endingMessage = "Kamu memutuskan kembali ke kampung halaman. Walau ilmu yang didapat belum mencapai tingkat puncak, kamu menjadi lentera yang menerangi ketidaktahuan penduduk desamu.";
+        } else if (rep >= 25) {
+            endTitle = "Sufi Pengembara";
+            endingMessage = "Perjalananmu telah selesai, tapi lembaran catatanmu masih banyak yang kosong. Kamu menyadari betapa luasnya samudera ilmu dan bertekad untuk kembali mengembara mencari guru lain.";
+        } else {
+            endTitle = "Santri Pemula";
+            endingMessage = "Kamu baru menyentuh kulit luar dari ilmu hadits. Gurumu tersenyum simpul dan memberimu sebuah kitab tipis, berpesan agar kamu mengulang kembali dari dasar dengan lebih sabar.";
+        }
+
+        document.getElementById('storyText').innerHTML = `
+            <h2 style="color: var(--primary); font-size: 24px; margin-bottom: 10px;">ENDING: ${endTitle}</h2>
+            <p style="font-size: 16px; line-height: 1.8; color: #475569; margin-bottom: 25px;">${endingMessage}</p>
+            <button class="btn-primary" onclick="genRecap()">Kumpulkan Hasil Perjalanan</button>
+        `;
+        document.getElementById('choicesGrid').innerHTML = '';
+        document.querySelector('.status-panel').style.display = 'none';
+    }
+
+    function showFail() {
+        endTitle = "DROP OUT";
+        document.getElementById('storyText').innerHTML = `<h2>GUGUR DI JALAN</h2><p>Reputasimu hancur. Guru-guru memintamu pulang untuk memperbaiki niat dan catatan. Jangan menyerah, ulangi dari awal!</p><button class="btn-primary" onclick="genRecap()">Kumpulkan Hasil</button>`;
+        document.getElementById('choicesGrid').innerHTML = '';
+        document.querySelector('.status-panel').style.display = 'none';
+    }
+
+    async function genRecap() {
+        document.getElementById('screenGame').style.display = 'none';
+        document.getElementById('screenRecap').style.display = 'block';
+        document.getElementById('recapName').innerText = pName;
+        document.getElementById('recapScore').innerText = rep;
+        document.getElementById('recapEnding').innerText = endTitle;
+        document.getElementById('statScore').innerText = rep;
+        document.getElementById('statAccuracy').innerText = Math.round((cAns/tQ)*100) + "%";
+        document.getElementById('statCorrect').innerText = cAns + "/" + tQ;
+        
+        const acC = document.getElementById('achievementsContainer'); acC.innerHTML = '';
+        achieves.forEach(a => {
+            if(a.cond(rep)) acC.innerHTML += `<div class="badge unlocked"><div class="badge-icon">${a.icon}</div><div>${a.title}</div></div>`;
+        });
+        
+        const formData = new URLSearchParams();
+        formData.append('name', pName);
+        formData.append('score', rep);
+        formData.append('title', endTitle);
+
+        try {
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: formData
+            });
+            // Setelah berhasil menyimpan, muat ulang papan peringkat
+            loadLDB();
+        } catch (error) {
+            console.error('Gagal menyimpan skor:', error);
+        }
+    }
+
+    async function loadLDB() {
+        if (SCRIPT_URL === 'GANTI_DENGAN_URL_WEB_APP_KAMU_YANG_PANJANG_TADI') {
+             document.getElementById('leaderboardIntro').innerHTML = '<p style="color: #f59e0b;">(Papan Peringkat belum terhubung. Harap masukkan SCRIPT_URL Google Sheets di kode terlebih dahulu).</p>';
+             return;
+        }
+
+        document.getElementById('leaderboardIntro').innerHTML = '<p>Sedang memuat data dari satelit...</p>';
+        
+        try {
+            const response = await fetch(SCRIPT_URL);
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status);
+            }
+            const allP = await response.json();
+            
+            const trs = Array.isArray(allP)
+                ? allP.map((p,i) => `<tr><td>${i+1}</td><td>${p.player_name || 'Anonim'}</td><td>${p.final_score ?? 0}</td><td>${p.ending_title || '-'}</td></tr>`).join('')
+                : '';
+            
+            if(trs) {
+                document.getElementById('leaderboardIntro').innerHTML = `<table class="leaderboard-table"><thead><tr><th>Rank</th><th>Nama</th><th>Skor</th><th>Gelar</th></tr></thead><tbody>${trs}</tbody></table>`;
+            } else {
+                document.getElementById('leaderboardIntro').innerHTML = '<p style="color: #999;">Belum ada pemain. Jadilah yang pertama!</p>';
+            }
+        } catch (error) {
+            document.getElementById('leaderboardIntro').innerHTML = '<p style="color: red;">Gagal memuat papan peringkat. Coba cek koneksi internet atau buka halaman dari server web.</p>';
+        }
+    }
+    
+    function resetGame() { location.reload(); }
+    
+    document.getElementById('soundToggle').onclick = function() { isSound = !isSound; this.innerText = isSound ? '🔊' : '🔇'; };
+  </script>
+ </body>
+</html>
